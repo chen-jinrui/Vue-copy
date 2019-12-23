@@ -41,7 +41,7 @@ export class Observer { // 它的作用是给对象的属性添加 getter 和 se
 
   constructor (value: any) {
     this.value = value
-    this.dep = new Dep() // 实例化 Dep 对象
+    this.dep = new Dep() // 实例化 Dep 对象, Dep 是整个 getter 依赖收集的核心
     this.vmCount = 0
     def(value, '__ob__', this) // 执行 def 函数把自身实例加到数据对象 value 的 __ob__ 属性上
     if (Array.isArray(value)) { // 对 value 做判断，
@@ -165,7 +165,7 @@ export function defineReactive (
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
-        dep.depend()
+        dep.depend() // 通过 dep.depend 做依赖收集
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {
